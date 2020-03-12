@@ -1,8 +1,22 @@
 import numpy as np
 import numpy.linalg as la
 import transformations as tr
+import yaml
 import math
 
+def load_IMU_Param(path = 'data/params.yaml'):
+    with open(path, 'r') as f:
+        yml = yaml.load(f.read())
+    params = ImuParameters()
+    params.frequency = yml['IMU.frequency']
+    params.sigma_a_n = yml['IMU.acc_noise_sigma']    # m/sqrt(s^3)
+    params.sigma_w_n = yml['IMU.gyro_noise_sigma']   # rad/sqrt(s)
+    params.sigma_a_b = yml['IMU.acc_bias_sigma']     # m/sqrt(s^5)
+    params.sigma_w_b = yml['IMU.gyro_bias_sigma']    # rad/sqrt(s^3)
+    params.gravity = yml['gravity']
+    params.bias_acc = yml['IMU.bias_acc']
+    params.bias_gyro = yml['IMU.bias_gyro']
+    return params
 
 class ImuParameters:
     def __init__(self):
@@ -11,6 +25,9 @@ class ImuParameters:
         self.sigma_w_n = 0.0     # gyro noise.  rad/sqrt(s), continuous noise sigma
         self.sigma_a_b = 0.0     # acc bias     m/sqrt(s^5), continuous bias sigma
         self.sigma_w_b = 0.0     # gyro bias    rad/sqrt(s^3), continuous bias sigma
+        self.gravity = np.zeros(3)
+        self.bias_acc = np.zeros(3)
+        self.bias_gyro = np.zeros(3)
 
 
 class ESEKF(object):

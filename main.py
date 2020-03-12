@@ -1,36 +1,21 @@
-import numpy as np
-import matplotlib.pyplot as plt
-import transformations as tr
-import yaml
 import math
-from esekf import *
-
-
-def load_imu_parameters():
-    f = open('./data/params.yaml', 'r')
-    yml = yaml.load(f.read())
-    params = ImuParameters()
-    params.frequency = yml['IMU.frequency']
-    params.sigma_a_n = yml['IMU.acc_noise_sigma']  # m/sqrt(s^3)
-    params.sigma_w_n = yml['IMU.gyro_noise_sigma']  # rad/sqrt(s)
-    params.sigma_a_b = yml['IMU.acc_bias_sigma']     # m/sqrt(s^5)
-    params.sigma_w_b = yml['IMU.gyro_bias_sigma']    # rad/sqrt(s^3)
-    f.close()
-    return params
-
+import numpy as np
+import numpy.linalg as la
+import transformations as tr
+from esekf import load_IMU_Param, ESEKF
 
 def main():
     imu_data = np.loadtxt('./data/imu_noise.txt')
     gt_data = np.loadtxt('./data/traj_gt.txt')
 
-    imu_parameters = load_imu_parameters()
+    imu_param = load_IMU_Param('data/params.yaml')
 
     init_nominal_state = np.zeros((19,))
-    init_nominal_state[:10] = gt_data[0, 1:]                # init p, q, v
-    init_nominal_state[10:13] = 0                           # init ba
-    init_nominal_state[13:16] = 0                           # init bg
-    init_nominal_state[16:19] = np.array([0, 0, -9.81])     # init g
-    estimator = ESEKF(init_nominal_state, imu_parameters)
+    init_nominal_state[:10] = gt_data[0, 1:]            # init p, q, v
+    init_nominal_state[10:13] = imu_param.bias_acc      # init ba
+    init_nominal_state[13:16] = imu_param.bias_gyro     # init bg
+    init_nominal_state[16:19] = imu_param.gravity       # init g
+    estimator = ESEKF(init_nominal_state, imu_param)
 
     test_duration_s = [0., 61.]
     start_time = imu_data[0, 0]

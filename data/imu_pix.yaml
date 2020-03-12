@@ -1,4 +1,4 @@
-IMU.frequency: 200
+IMU.frequency: 100
 
 IMU.acc_noise_sigma: 0.019    # m/sqrt(s^3)     (continuous noise)
 IMU.gyro_noise_sigma: 0.015   # rad/sqrt(s)     (continuous noise)
@@ -6,7 +6,10 @@ IMU.gyro_noise_sigma: 0.015   # rad/sqrt(s)     (continuous noise)
 IMU.acc_bias_sigma: 0.0001    # m/sqrt(s^5)     (continuous bias)
 IMU.gyro_bias_sigma: 2.0e-5   # rad/sqrt(s^3)   (continuous bias)
 
-IMU.bias_acc: [0, 0, 0]
-IMU.bias_gyro: [0, 0, 0]
+IMU.bias_acc: [0, -0.12698458, -0.02001969]
+IMU.bias_gyro: [0, -1.7505698e-05, -1.3807872e-05]
+gravity: [9.804522, 0, 0]
 
-gravity: [0, 0, -9.81]
+# IMU.bias_acc: [0, 0, 0]
+# IMU.bias_gyro: [0, 0, 0]
+# gravity: [-9.804522, 0, 0]
