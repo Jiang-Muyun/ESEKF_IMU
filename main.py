@@ -56,14 +56,17 @@ def main():
             # we assume the timestamps are aligned.
             assert math.isclose(gt_data[i, 0], timestamp)
             gt_pose = gt_data[i, 1:8].copy()  # gt_pose = [p, q]
+
             # add position noise
             gt_pose[:3] += np.random.randn(3,) * sigma_measurement_p
+
             # add rotation noise, u = [1, 0.5 * noise_angle_axis]
             # u = 0.5 * np.random.randn(4,) * sigma_measurement_q
             # u[0] = 1
             u = np.random.randn(3, ) * sigma_measurement_q
             qn = tr.quaternion_about_axis(la.norm(u), u / la.norm(u))
             gt_pose[3:] = tr.quaternion_multiply(gt_pose[3:], qn)
+            
             # update filter by measurement.
             estimator.update(gt_pose, sigma_measurement)
 

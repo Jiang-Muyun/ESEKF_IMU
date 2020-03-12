@@ -207,6 +207,7 @@ class ESEKF(object):
         dv/dt = R(a_m - a_b) + g
         dq/dt = 0.5 * q x(quaternion product) (w_m - w_b)
         
+        [ p, q, v, a_b, w_b, g ], a 19x1 or 1x19 vector
         a_m and w_m are the measurements of IMU.
         a_b and w_b are biases of acc and gyro, respectively.
         R = R{q}, which bring the point from local coordinate to global coordinate.
